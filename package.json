@@ -52,7 +52,7 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/",
-      "/dist/"
+      "/build/"
     ]
   }
 }
