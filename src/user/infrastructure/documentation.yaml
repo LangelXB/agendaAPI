@@ -1,0 +1,21 @@
+openapi: 3.0.0
+paths:
+  /usertwo/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user ID
+      tags:
+        - user
+      summary: getDetail
+      description: Este endpoint devuelve los detalles de un usuario
+      responses:
+        '200':
+          description: Retorna un usuario.
+      security:
+        - bearerAuth: []

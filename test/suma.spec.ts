@@ -1,4 +1,4 @@
-import sum from '../controllers/suma.ctrl';
+import sum from '../src/controllers/suma.ctrl';
 
 describe('sum module', () => {
   test('adds 1 + 2 to equal 3', () => {

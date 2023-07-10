@@ -3,7 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import SwaggerUi from 'swagger-ui-express';
 import swagger from './docs/swagger';
-import routerIndex from './routes/index.routes';
+import routerIndex from './routes/index.Routes';
 
 const app = express();
 
