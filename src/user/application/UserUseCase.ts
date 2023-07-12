@@ -2,11 +2,7 @@ import { UserEntity } from '../domain/user.Entity';
 import { UserRepositoryInterface } from '../domain/user.Repository';
 
 export default class UserUseCase {
-  userRepository: UserRepositoryInterface;
-
-  constructor(repository: UserRepositoryInterface) {
-    this.userRepository = repository;
-  }
+  constructor(private readonly userRepository: UserRepositoryInterface) {}
 
   public async registerUser(newUser: UserEntity) {
     const userCreated = await this.userRepository.registerUser(newUser);

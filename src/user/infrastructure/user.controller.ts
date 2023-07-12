@@ -3,11 +3,7 @@ import UserUseCase from '../application/UserUseCase';
 import UserValue from '../domain/uset.Value';
 
 export default class UserController {
-  userUseCase: UserUseCase;
-
-  constructor(usercase: UserUseCase) {
-    this.userUseCase = usercase;
-  }
+  constructor(private readonly userUseCase: UserUseCase) {}
 
   createUser = async (req: Request, res: Response) => {
     const { body } = req;

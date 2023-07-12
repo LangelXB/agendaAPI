@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import config from '../config';
+import config from './config';
 import User from '../user/infrastructure/user.Model';
 
 const appDataSource = new DataSource({

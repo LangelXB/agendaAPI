@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import app from './app';
-import appDataSource from './db/index.db';
-import config from './config';
+import app from './config/app';
+import appDataSource from './config/db';
+import config from './config/config';
 
 async function main() {
   try {
