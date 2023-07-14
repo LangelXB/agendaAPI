@@ -1,0 +1,15 @@
+components:
+  schemas:
+    User:
+      {
+        type: 'object',
+        properties:
+          {
+            id: { type: 'integer', minimum: 1 },
+            name: { type: 'string' },
+            email: { type: 'string', format: 'email' },
+            phone: { type: 'string' },
+            lastname: { type: 'string' },
+          },
+        required: ['id', 'name', 'email'],
+      }

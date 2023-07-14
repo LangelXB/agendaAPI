@@ -18,13 +18,12 @@ const swaggerDefinition: OAS3Definition = {
         scheme: 'bearer',
       },
     },
-    schemas: {},
   },
 };
 
 const swaggerOptions: OAS3Options = {
   swaggerDefinition,
-  apis: ['./src/routes/*.ts', './src/**/*.Routes.ts', './src/**/*.yaml'],
+  apis: ['./docs/**/*.yaml'],
 };
 
 export default swaggerJSDoc(swaggerOptions);

@@ -10,7 +10,7 @@ const appDataSource = new DataSource({
   password: config.DB_PASSWORD,
   database: config.DB_NAME,
   entities: [User],
-  logging: true,
+  // logging: true,
   synchronize: true,
 });
 

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 paths:
-  /usertwo/{id}:
+  /user/{id}:
     get:
       parameters:
         - in: path
@@ -17,5 +17,10 @@ paths:
       responses:
         '200':
           description: Retorna un usuario.
+          content:
+            application/json:
+              schema:
+                type: 'object'
+                $ref: '#/components/schemas/User'
       security:
         - bearerAuth: []
