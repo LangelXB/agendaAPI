@@ -7,7 +7,7 @@ import config from './config/config';
 async function main() {
   try {
     await appDataSource.initialize();
-    console.log(`🟢 DB Conected`);
+    console.log(`🟢 DB Conected Success`);
     app.listen(config.PORT, () => {
       console.log(`🚀 [API]: Running in 🏁🏁🏁 http://localhost:${config.PORT} 🏁🏁🏁 ✔`);
     });
