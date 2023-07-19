@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, JoinTable } from 'typeorm';
 import { UserEntity } from '../domain/user.Entity';
+import Appointment from '../../appointments/infrastructure/appointment.Model';
 
 @Entity()
 export default class User extends BaseEntity implements UserEntity {
@@ -14,4 +15,8 @@ export default class User extends BaseEntity implements UserEntity {
 
   @Column()
   email: string;
+
+  @OneToMany(() => Appointment, (appointment) => appointment.user)
+  @JoinTable()
+  appointment: Appointment[];
 }
