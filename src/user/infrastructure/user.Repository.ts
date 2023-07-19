@@ -4,13 +4,15 @@ import User from './user.Model';
 
 export default class UserRepositorySQL implements UserRepositoryInterface {
   findUserById(id: number): Promise<UserEntity | null> {
-    const user = User.findOneBy({ id });
+    const user = User.findOneBy({ idUser: id });
     return user;
   }
 
   registerUser(user: UserEntity): Promise<UserEntity | null> {
     const newUser = new User();
-    newUser.lastName = user.lastName;
+    newUser.fullName = user.fullName;
+    newUser.emailUser = user.emailUser;
+    newUser.phoneUser = user.phoneUser;
     return newUser.save();
   }
 

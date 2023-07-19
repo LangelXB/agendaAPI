@@ -4,14 +4,14 @@ import { UserEntity } from '../domain/user.Entity';
 @Entity()
 export default class User extends BaseEntity implements UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  idUser: number;
 
   @Column()
-  name: string;
+  fullName: string;
 
   @Column()
-  lastName: string;
+  phoneUser: string;
 
   @Column()
-  email: string;
+  emailUser: string;
 }
