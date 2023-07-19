@@ -1,6 +1,6 @@
 export interface BussinessEntity {
   IdBussiness: number;
   NameB: string;
-  PhoneB: number;
+  PhoneB: string;
   MailB: string;
 }
