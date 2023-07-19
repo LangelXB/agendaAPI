@@ -1,4 +1,4 @@
 export interface appointmentInterface {
-  IdAppointment: number;
+  id: number;
   Date: Date;
 }

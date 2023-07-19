@@ -1,4 +1,4 @@
 export interface paymentInterface {
-  IdPayment: number;
+  id: number;
   descPayment: string;
 }

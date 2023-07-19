@@ -1,7 +1,7 @@
 import { UserEntity } from './user.Entity';
 
 export default class UserValue implements UserEntity {
-  idUser?: number;
+  id?: number;
 
   fullName: string;
 
@@ -10,7 +10,7 @@ export default class UserValue implements UserEntity {
   emailUser: string;
 
   constructor(email: string, phone: string, name?: string, id?: number) {
-    this.idUser = id;
+    this.id = id;
     this.fullName = name ?? 'User';
     this.phoneUser = phone;
     this.emailUser = email;

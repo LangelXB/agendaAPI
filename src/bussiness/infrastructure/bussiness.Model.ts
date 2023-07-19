@@ -11,13 +11,13 @@ import {
 } from 'typeorm';
 import { BussinessEntity } from '../domain/bussiness.Entity';
 import Category from './category.Model';
-import profesionalist from '../../appointments/infrastructure/profesionalist.Model';
-import service from '../../services/infrastructure/service.Model';
+import Profesionalist from '../../appointments/infrastructure/profesionalist.Model';
+import Service from '../../services/infrastructure/service.Model';
 
 @Entity()
 export default class Bussiness extends BaseEntity implements BussinessEntity {
   @PrimaryGeneratedColumn()
-  IdBussiness: number;
+  id: number;
 
   @Column()
   NameB: string;
@@ -31,11 +31,11 @@ export default class Bussiness extends BaseEntity implements BussinessEntity {
   @ManyToOne(() => Category, (category) => category.bussinesses)
   category: Category;
 
-  @OneToOne(() => profesionalist) // Especifica la entidad relacionada
+  @OneToOne(() => Profesionalist) // Especifica la entidad relacionada
   @JoinColumn()
-  profesionalist: profesionalist;
+  profesionalist: Profesionalist;
 
-  @ManyToMany(() => service)
+  @ManyToMany(() => Service, (service) => service.bussines)
   @JoinTable()
-  service: service;
+  services: Service[];
 }

@@ -1,11 +1,12 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { serviceEntity } from '../domain/service.Entity';
-import payment from './payment.Model';
+import Payment from './payment.Model';
+import Bussiness from '../../bussiness/infrastructure/bussiness.Model';
 
 @Entity()
-export default class service extends BaseEntity implements serviceEntity {
+export default class Service extends BaseEntity implements serviceEntity {
   @PrimaryGeneratedColumn()
-  IdService: number;
+  id: number;
 
   @Column()
   name: string;
@@ -19,7 +20,10 @@ export default class service extends BaseEntity implements serviceEntity {
   @Column()
   amount: number;
 
-  @ManyToMany(() => payment)
+  @ManyToMany(() => Payment, (payment) => payment.services)
   @JoinTable()
-  payment: payment;
+  payments: Payment[];
+
+  @ManyToMany(() => Bussiness, (bussines) => bussines.services)
+  bussines: Bussiness[];
 }

@@ -6,7 +6,7 @@ import Profesionalist from './profesionalist.Model';
 @Entity()
 export default class Appointment extends BaseEntity implements appointmentInterface {
   @PrimaryGeneratedColumn()
-  IdAppointment: number;
+  id: number;
 
   @Column()
   Date: Date;

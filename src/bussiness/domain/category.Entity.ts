@@ -1,5 +1,5 @@
 export interface categoryEntity {
-  IdCateogry: number;
+  id: number;
   NameCat: string;
   DescCat: string;
 }

@@ -1,4 +1,4 @@
 export interface profesionalistEntity {
-  IdProfessionalist: number;
+  id: number;
   ProfName: string;
 }

@@ -1,5 +1,5 @@
 export interface serviceEntity {
-  IdService: number;
+  id: number;
   name: string;
   description: string;
   duration: Date;

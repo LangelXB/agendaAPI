@@ -4,9 +4,9 @@ import Bussiness from '../../bussiness/infrastructure/bussiness.Model';
 import Appointment from './appointment.Model';
 
 @Entity()
-export default class profesionalist extends BaseEntity implements profesionalistEntity {
+export default class Profesionalist extends BaseEntity implements profesionalistEntity {
   @PrimaryGeneratedColumn()
-  IdProfessionalist: number;
+  id: number;
 
   @Column()
   ProfName: string;

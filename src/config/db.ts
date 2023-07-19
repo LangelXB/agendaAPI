@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 import config from './config';
 import User from '../user/infrastructure/user.Model';
 import Appointment from '../appointments/infrastructure/appointment.Model';
-import profesionalist from '../appointments/infrastructure/profesionalist.Model';
+import Profesionalist from '../appointments/infrastructure/profesionalist.Model';
 import Bussiness from '../bussiness/infrastructure/bussiness.Model';
-import category from '../bussiness/infrastructure/category.Model';
-import service from '../services/infrastructure/service.Model';
-import payment from '../services/infrastructure/payment.Model';
+import Category from '../bussiness/infrastructure/category.Model';
+import Service from '../services/infrastructure/service.Model';
+import Payment from '../services/infrastructure/payment.Model';
 
 const appDataSource = new DataSource({
   type: 'mysql',
@@ -15,9 +15,9 @@ const appDataSource = new DataSource({
   username: config.DB_USERNAME,
   password: config.DB_PASSWORD,
   database: config.DB_NAME,
-  entities: [User, service, payment, category, Bussiness, profesionalist, Appointment],
+  entities: [User, Service, Payment, Category, Bussiness, Profesionalist, Appointment],
   logging: true,
-  synchronize: true,
+  // synchronize: true,
 });
 
 export default appDataSource;

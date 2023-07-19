@@ -3,9 +3,9 @@ import { categoryEntity } from '../domain/category.Entity';
 import Bussiness from './bussiness.Model';
 
 @Entity()
-export default class category extends BaseEntity implements categoryEntity {
+export default class Category extends BaseEntity implements categoryEntity {
   @PrimaryGeneratedColumn()
-  IdCateogry: number;
+  id: number;
 
   @Column()
   NameCat: string;

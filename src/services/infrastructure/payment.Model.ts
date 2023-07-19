@@ -1,11 +1,15 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { paymentInterface } from '../domain/payment.Entity';
+import Service from './service.Model';
 
 @Entity()
-export default class payment extends BaseEntity implements paymentInterface {
+export default class Payment extends BaseEntity implements paymentInterface {
   @PrimaryGeneratedColumn()
-  IdPayment: number;
+  id: number;
 
   @Column()
   descPayment: string;
+
+  @ManyToMany(() => Service, (service) => service.payments)
+  services: Service;
 }

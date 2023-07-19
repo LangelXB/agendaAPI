@@ -1,5 +1,5 @@
 export interface BussinessEntity {
-  IdBussiness: number;
+  id: number;
   NameB: string;
   PhoneB: string;
   MailB: string;

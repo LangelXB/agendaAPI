@@ -5,7 +5,7 @@ import Appointment from '../../appointments/infrastructure/appointment.Model';
 @Entity()
 export default class User extends BaseEntity implements UserEntity {
   @PrimaryGeneratedColumn()
-  idUser: number;
+  id: number;
 
   @Column()
   fullName: string;

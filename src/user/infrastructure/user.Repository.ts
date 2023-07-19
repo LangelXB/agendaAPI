@@ -4,7 +4,7 @@ import User from './user.Model';
 
 export default class UserRepositorySQL implements UserRepositoryInterface {
   findUserById(id: number): Promise<UserEntity | null> {
-    const user = User.findOneBy({ idUser: id });
+    const user = User.findOneBy({ id });
     return user;
   }
 
