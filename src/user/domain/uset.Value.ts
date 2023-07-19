@@ -1,15 +1,18 @@
 import { UserEntity } from './user.Entity';
 
 export default class UserValue implements UserEntity {
-  name: string;
+  idUser?: number;
 
-  lastName: string;
+  fullName: string;
 
-  email: string;
+  phoneUser: string;
 
-  constructor(name: string, email: string, lastName: string) {
-    this.name = name;
-    this.email = email;
-    this.lastName = lastName;
+  emailUser: string;
+
+  constructor(email: string, phone: string, name?: string, id?: number) {
+    this.idUser = id;
+    this.fullName = name ?? 'User';
+    this.phoneUser = phone;
+    this.emailUser = email;
   }
 }

@@ -5,16 +5,16 @@ import Appointment from '../../appointments/infrastructure/appointment.Model';
 @Entity()
 export default class User extends BaseEntity implements UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  idUser: number;
 
   @Column()
-  name: string;
+  fullName: string;
 
   @Column()
-  lastName: string;
+  phoneUser: string;
 
   @Column()
-  email: string;
+  emailUser: string;
 
   @OneToMany(() => Appointment, (appointment) => appointment.user)
   @JoinTable()

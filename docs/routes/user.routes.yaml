@@ -15,12 +15,36 @@ paths:
       summary: getDetail
       description: Este endpoint devuelve los detalles de un usuario
       responses:
-        '200':
+        "200":
           description: Retorna un usuario.
           content:
             application/json:
               schema:
-                type: 'object'
-                $ref: '#/components/schemas/User'
+                type: object
+                $ref: "#/components/schemas/User"
+      security:
+        - bearerAuth: []
+
+  /user:
+    post:
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      tags:
+        - user
+      summary: getDetail
+      description: Este endpoint devuelve los detalles de un usuario
+      responses:
+        "200":
+          description: Retorna un usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/User"
       security:
         - bearerAuth: []

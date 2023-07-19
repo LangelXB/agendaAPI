@@ -2,14 +2,12 @@ components:
   schemas:
     User:
       {
-        type: 'object',
+        type: "object",
         properties:
           {
-            id: { type: 'integer', minimum: 1 },
-            name: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            phone: { type: 'string' },
-            lastname: { type: 'string' },
+            idUser: { type: "integer", minimum: 1 },
+            fullName: { type: "string" },
+            phoneUser: { type: "string", example: "123456789" },
+            emailUser: { type: "string", format: "email" },
           },
-        required: ['id', 'name', 'email'],
       }

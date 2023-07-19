@@ -1,5 +1,6 @@
 export interface UserEntity {
-  name: string;
-  lastName: string;
-  email: string;
+  idUser?: number;
+  fullName: string;
+  phoneUser: string;
+  emailUser: string;
 }
