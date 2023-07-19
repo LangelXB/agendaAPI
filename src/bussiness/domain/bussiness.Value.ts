@@ -1,15 +1,15 @@
 import { BussinessEntity } from './bussiness.Entity';
 
 export default class bussinessValue implements BussinessEntity {
-  IdBussiness: number;
+  id: number;
 
   NameB: string;
 
-  PhoneB: number;
+  PhoneB: string;
 
   MailB: string;
 
-  constructor(name: string, phone: number, email: string) {
+  constructor(name: string, phone: string, email: string) {
     this.NameB = name;
 
     this.PhoneB = phone;
