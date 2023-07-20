@@ -1,19 +1,29 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { appointmentInterface } from '../domain/appointment.entity';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinTable } from 'typeorm';
+import appointmentEntity from '../domain/appointment.Entity';
 import User from '../../user/infrastructure/user.Model';
-import Profesionalist from './profesionalist.Model';
+import Service from '../../services/infrastructure/service.Model';
+import Bussiness from '../../bussiness/infrastructure/bussiness.Model';
 
 @Entity()
-export default class Appointment extends BaseEntity implements appointmentInterface {
+export default class Appointment extends BaseEntity implements appointmentEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  IdAppoinment: number;
 
   @Column()
-  Date: Date;
+  DateAppointment: Date;
+
+  @Column()
+  statusPayment: Boolean;
 
   @ManyToOne(() => User, (user) => user.appointment)
+  @JoinTable()
   user: User;
 
-  @ManyToOne(() => Profesionalist, (profesionalist) => profesionalist.appointment)
-  profesionalist: Profesionalist;
+  @ManyToOne(() => Service, (service) => service.appointment)
+  @JoinTable()
+  service: Service;
+
+  @ManyToOne(() => Bussiness, (bussiness) => bussiness.appointment)
+  @JoinTable()
+  bussiness: Bussiness;
 }

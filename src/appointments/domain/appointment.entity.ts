@@ -1,4 +1,5 @@
-export interface appointmentInterface {
-  id: number;
-  Date: Date;
+export default interface appointmentEntity {
+  IdAppoinment: number;
+  DateAppointment: Date;
+  statusPayment: Boolean;
 }
