@@ -1,0 +1,4 @@
+components:
+  schemas:
+    status: { type: "integer", example: 200 }
+    message: { type: "string", example: "Operacion Exitosa" }

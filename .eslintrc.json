@@ -12,13 +12,14 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
-    "no-console": "off",
+    "no-console": "warn",
     "prettier/prettier": "error",
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
     "no-empty-function": "off",
+    "no-shadow": "off",
     "@typescript-eslint/no-unused-vars": ["error"]
   }
 }

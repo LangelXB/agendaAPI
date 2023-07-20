@@ -21,7 +21,13 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/User"
+                properties:
+                  {
+                    status: { $ref: "#/components/schemas/status" },
+                    message: { $ref: "#/components/schemas/message" },
+                    data: { $ref: "#/components/schemas/User" },
+                  }
+
       security:
         - bearerAuth: []
 
@@ -45,6 +51,11 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/User"
+                properties:
+                  {
+                    status: { $ref: "#/components/schemas/status" },
+                    message: { $ref: "#/components/schemas/message" },
+                    data: { $ref: "#/components/schemas/User" },
+                  }
       security:
         - bearerAuth: []
