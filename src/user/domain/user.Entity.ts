@@ -3,4 +3,5 @@ export interface UserEntity {
   fullName: string;
   phoneUser: string;
   emailUser: string;
+  password: string;
 }

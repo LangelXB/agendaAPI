@@ -26,6 +26,9 @@ export default class User extends BaseEntity implements UserEntity {
   @Column()
   emailUser: string;
 
+  @Column()
+  password: string;
+
   @OneToMany(() => Appointment, (appointment) => appointment.user)
   @JoinTable()
   appointment: Appointment[];
