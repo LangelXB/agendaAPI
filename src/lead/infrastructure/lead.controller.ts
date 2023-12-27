@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { isValidObjectId } from 'mongoose';
 import LeadUseCase from '../application/leadUseCase';
 import { ILeadEntity } from '../domain/lead.Entity';
+import { IOptionsPagination } from '../domain/lead.interface';
 
 export default class LeadController {
   constructor(private readonly leadUseCase: LeadUseCase) {}
@@ -20,7 +21,12 @@ export default class LeadController {
   };
 
   listLead = async (req: Request, res: Response) => {
-    const leads = await this.leadUseCase.listLead();
+    const options: IOptionsPagination = req.body;
+    // validate options
+    if (!options.tenantId) return res.status(400).json({ message: 'tenantId is required' });
+    if (!options.limit) options.limit = 10;
+    if (!options.page) options.page = 0;
+    const leads = await this.leadUseCase.listLead(options);
     return res.send(leads);
   };
 

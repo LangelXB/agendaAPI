@@ -1,5 +1,5 @@
 import { ILeadEntity } from '../domain/lead.Entity';
-import { ILeadRepository } from '../domain/lead.interface';
+import { ILeadRepository, IOptionsPagination, IResponsePagination } from '../domain/lead.interface';
 
 export default class LeadUseCase {
   constructor(private readonly leadRepository: ILeadRepository) {}
@@ -8,8 +8,8 @@ export default class LeadUseCase {
     return this.leadRepository.createLead(lead);
   }
 
-  async listLead(): Promise<ILeadEntity[]> {
-    return this.leadRepository.listLead();
+  async listLead(options: IOptionsPagination): Promise<IResponsePagination> {
+    return this.leadRepository.listLead(options);
   }
 
   async findLeadById(id: string): Promise<ILeadEntity | null> {

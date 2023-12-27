@@ -1,7 +1,7 @@
-import { PipelineStage } from 'mongoose';
-import { ILeadEntity } from '../domain/lead.Entity';
-import { ILeadRepository } from '../domain/lead.interface';
-import Lead from './lead.model';
+import { PipelineStage, ProjectionType } from 'mongoose';
+import { ILeadDocument, ILeadEntity } from '../domain/lead.Entity';
+import { ILeadRepository, IOptionsPagination, IResponsePagination } from '../domain/lead.interface';
+import Lead from './lead.Model';
 
 export default class LeadRepository implements ILeadRepository {
   createLead(lead: ILeadEntity): Promise<ILeadEntity | null> {
@@ -9,9 +9,23 @@ export default class LeadRepository implements ILeadRepository {
     return newLead.save();
   }
 
-  listLead(): Promise<ILeadEntity[]> {
-    const leadList = Lead.find();
-    return leadList;
+  async listLead(options: IOptionsPagination): Promise<IResponsePagination> {
+    const project: ProjectionType<ILeadDocument> = {
+      real_estate_group_id: 1,
+      contact_lead_name: 1,
+      budget: 1,
+      createdAt: 1,
+    };
+    const leadList = await Lead.find({ real_estate_group_id: options.tenantId }, project)
+      .limit(options.limit)
+      .skip(options.page * options.limit);
+    const result: IResponsePagination = {
+      total: await this.countLeadsByInmo(options.tenantId),
+      page: options.page + 1,
+      limit: options.limit,
+      data: leadList,
+    };
+    return Promise.resolve(result);
   }
 
   findLeadById(id: string): Promise<ILeadEntity | null> {
