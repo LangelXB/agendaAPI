@@ -86,6 +86,20 @@ export default class LeadRepository implements ILeadRepository {
         $match: match,
       },
       {
+        $addFields: {
+          tracking_phase: {
+            $cond: [
+              { $eq: ['$tracking_phase', ''] },
+              {
+                $cond: [{ $eq: ['$phase', 'finished'] }, '$phase', '$operation_phase'],
+              },
+
+              '$tracking_phase',
+            ],
+          },
+        },
+      },
+      {
         $group: {
           _id: {
             contact: '$contact_broker_id',

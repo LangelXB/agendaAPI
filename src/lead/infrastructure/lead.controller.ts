@@ -2,7 +2,22 @@ import { Request, Response } from 'express';
 import { isValidObjectId } from 'mongoose';
 import LeadUseCase from '../application/leadUseCase';
 import { ILeadEntity } from '../domain/lead.Entity';
-import { IOptionsPagination, IfilterReport } from '../domain/lead.interface';
+import { IDataComertialReport, IOptionsPagination, IfilterReport } from '../domain/lead.interface';
+
+interface ICounters {
+  allActive: number;
+  allDiscarded: number;
+}
+interface IAllPhase extends ICounters {
+  phase: string;
+}
+
+interface IResumeReportComertial extends ICounters {
+  tof: ICounters;
+  mof: ICounters;
+  bof: ICounters;
+  allByPhases: IAllPhase[];
+}
 
 export default class LeadController {
   constructor(private readonly leadUseCase: LeadUseCase) {}
@@ -63,6 +78,46 @@ export default class LeadController {
       }
     }
     const result = await this.leadUseCase.comertialReport(filter);
-    return res.json(result);
+    const resume = this.resumeReportComertial(result);
+    return res.json({ resume, result });
   };
+
+  private resumeReportComertial(report: IDataComertialReport[]): IResumeReportComertial {
+    const result: IResumeReportComertial = {
+      tof: { allActive: 0, allDiscarded: 0 },
+      mof: { allActive: 0, allDiscarded: 0 },
+      bof: { allActive: 0, allDiscarded: 0 },
+      allActive: 0,
+      allDiscarded: 0,
+      allByPhases: [],
+    };
+    report.forEach((contact) => {
+      const { data } = contact;
+      data.forEach((phase) => {
+        const { tracking_phase: trackingPhase, discardedInPhase, activeInPhase } = phase;
+        if (['assigned', 'to-contact'].includes(trackingPhase)) {
+          result.tof.allActive += activeInPhase;
+          result.tof.allDiscarded += discardedInPhase;
+        }
+        if (['searching', 'tracking', 'scheduled-tour', 'finished-tour'].includes(trackingPhase)) {
+          result.mof.allActive += activeInPhase;
+          result.mof.allDiscarded += discardedInPhase;
+        }
+        if (['offer', 'downpayment', 'contract', 'closing-trade'].includes(trackingPhase)) {
+          result.bof.allActive += activeInPhase;
+          result.bof.allDiscarded += discardedInPhase;
+        }
+        result.allActive += activeInPhase;
+        result.allDiscarded += discardedInPhase;
+        const index = result.allByPhases.findIndex((phase) => phase.phase === trackingPhase);
+        if (index !== -1) {
+          result.allByPhases[index].allActive += activeInPhase;
+          result.allByPhases[index].allDiscarded += discardedInPhase;
+        } else {
+          result.allByPhases.push({ phase: trackingPhase, allActive: activeInPhase, allDiscarded: discardedInPhase });
+        }
+      });
+    });
+    return result;
+  }
 }
