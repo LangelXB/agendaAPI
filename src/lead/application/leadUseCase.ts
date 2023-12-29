@@ -1,5 +1,5 @@
 import { ILeadEntity } from '../domain/lead.Entity';
-import { ILeadRepository, IOptionsPagination, IResponsePagination } from '../domain/lead.interface';
+import { ILeadRepository, IOptionsPagination, IResponsePagination, IfilterReport } from '../domain/lead.interface';
 
 export default class LeadUseCase {
   constructor(private readonly leadRepository: ILeadRepository) {}
@@ -22,5 +22,9 @@ export default class LeadUseCase {
 
   async countLeadsByInmo(id: string): Promise<number> {
     return this.leadRepository.countLeadsByInmo(id);
+  }
+
+  async comertialReport(filter: IfilterReport) {
+    return this.leadRepository.comertialReport(filter);
   }
 }

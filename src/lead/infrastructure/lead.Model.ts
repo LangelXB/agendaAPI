@@ -61,6 +61,6 @@ const LeadSchema: Schema<ILeadDocument> = new Schema({
   assigned_at: { type: AssignedAtSchema },
 });
 
-const LeadModel = model<ILeadDocument, ILeadModel>('longLeads', LeadSchema, 'longLeads');
+const LeadModel = model<ILeadDocument, ILeadModel>('leads', LeadSchema, 'leads');
 
 export default LeadModel;

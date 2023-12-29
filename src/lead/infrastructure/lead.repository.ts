@@ -1,6 +1,12 @@
-import { PipelineStage, ProjectionType } from 'mongoose';
+import mongoose, { Aggregate, PipelineStage, ProjectionType } from 'mongoose';
 import { ILeadDocument, ILeadEntity } from '../domain/lead.Entity';
-import { ILeadRepository, IOptionsPagination, IResponsePagination } from '../domain/lead.interface';
+import {
+  IDataComertialReport,
+  ILeadRepository,
+  IOptionsPagination,
+  IResponsePagination,
+  IfilterReport,
+} from '../domain/lead.interface';
 import Lead from './lead.Model';
 
 export default class LeadRepository implements ILeadRepository {
@@ -59,5 +65,179 @@ export default class LeadRepository implements ILeadRepository {
       console.log(error);
       return Promise.resolve(0);
     }
+  }
+
+  async comertialReport(filter: IfilterReport): Promise<IDataComertialReport[]> {
+    const { tenantId, zones, date } = filter;
+    const match: any = {
+      real_estate_group_id: new mongoose.Types.ObjectId(tenantId),
+    };
+    if (date) match.created_at = { $gte: date.start, $lte: date.end };
+
+    if (zones) {
+      if (Array.isArray(zones)) {
+        match.zones = { $in: zones };
+      } else {
+        match.zones = zones;
+      }
+    }
+    const pipeline: PipelineStage[] = [
+      {
+        $match: match,
+      },
+      {
+        $group: {
+          _id: {
+            contact: '$contact_broker_id',
+            tracking_phase: '$tracking_phase',
+          },
+          discardedInPhase: {
+            $sum: {
+              $cond: [
+                {
+                  $eq: ['$phase', 'discarded'],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          activeInPhase: {
+            $sum: {
+              $cond: [
+                {
+                  $ne: ['$phase', 'discarded'],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          // if not exist currency by default is mxn
+          budgetMXN: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $ne: ['$currency', 'USD'],
+                    },
+                    {
+                      $ne: ['$phase', 'discarded'],
+                    },
+                  ],
+                },
+                '$budget',
+                0,
+              ],
+            },
+          },
+          // convert usd to mxn
+          // https://api.exchangerate-api.com/v4/latest/Usd
+          budgetUSD: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $eq: ['$currency', 'USD'],
+                    },
+                    {
+                      $ne: ['$phase', 'discarded'],
+                    },
+                  ],
+                },
+                '$budget',
+                0,
+              ],
+            },
+          },
+          probability: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $eq: ['$profile', 'A'],
+                    },
+                    {
+                      $ne: ['$phase', 'discarded'],
+                    },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          inmediatez: {
+            $sum: {
+              $cond: [
+                {
+                  $lte: [
+                    {
+                      $divide: [
+                        {
+                          $subtract: ['$reviewed.date_at', '$created_at'],
+                        },
+                        60000, // Dividir por 60000 para convertir milisegundos a minutos
+                      ],
+                    },
+                    5,
+                  ],
+                },
+                0,
+                1,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.contact',
+          data: {
+            $push: {
+              tracking_phase: '$_id.tracking_phase',
+              discardedInPhase: '$discardedInPhase',
+              activeInPhase: '$activeInPhase',
+              budgetMXN: '$budgetMXN',
+              budgetUSD: '$budgetUSD',
+              probability: '$probability',
+              inmediatez: '$inmediatez',
+              totalByPhase: {
+                $sum: ['$activeInPhase', '$discardedInPhase'],
+              },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: 'contact_id',
+          as: 'contact',
+        },
+      },
+      {
+        $unwind: {
+          path: '$contact',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          data: 1,
+          name: '$contact.name',
+          role: '$contact.role',
+          totalByContac: { $sum: '$data.totalByPhase' },
+        },
+      },
+      { $sort: { totalByContac: -1 } },
+    ];
+    console.log(pipeline[0]);
+    const query: Aggregate<IDataComertialReport[]> = Lead.aggregate(pipeline);
+    return query;
   }
 }

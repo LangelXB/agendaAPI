@@ -16,5 +16,6 @@ leadRouter.get('/', leadCtrl.listLead);
 leadRouter.get('/count', leadCtrl.countLeads);
 leadRouter.get('/count/:id', leadCtrl.countLeadsByInmo);
 leadRouter.get('/:id', leadCtrl.getLead);
+leadRouter.post('/report/comertial', leadCtrl.comertialReport);
 
 export default leadRouter;
