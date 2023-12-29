@@ -13,7 +13,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.use('/documentation', SwaggerUi.serve, SwaggerUi.setup(swagger));
+app.use('/docs', SwaggerUi.serve, SwaggerUi.setup(swagger));
 app.use(routerIndex);
 
 export default app;
