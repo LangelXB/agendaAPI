@@ -71,6 +71,7 @@ export default class LeadRepository implements ILeadRepository {
     const { tenantId, zones, date } = filter;
     const match: any = {
       real_estate_group_id: new mongoose.Types.ObjectId(tenantId),
+      contact_broker_id: { $exists: true },
     };
     if (date) match.created_at = { $gte: date.start, $lte: date.end };
 
@@ -245,7 +246,7 @@ export default class LeadRepository implements ILeadRepository {
           data: 1,
           name: '$contact.name',
           role: '$contact.role',
-          totalByContac: { $sum: '$data.totalByPhase' },
+          totalByContact: { $sum: '$data.totalByPhase' },
         },
       },
       { $sort: { totalByContac: -1 } },

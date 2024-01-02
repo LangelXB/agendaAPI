@@ -4,23 +4,39 @@ import LeadUseCase from '../application/leadUseCase';
 import { ILeadEntity } from '../domain/lead.Entity';
 import { IDataComertialReport, IOptionsPagination, IfilterReport } from '../domain/lead.interface';
 
+type ValidKeys = 'tof' | 'mof' | 'bof';
+
 interface ICounters {
   allActive: number;
   allDiscarded: number;
 }
-interface IAllPhase extends ICounters {
-  phase: string;
+interface IAllPhase {
+  [phase: string]: ICounters;
 }
 
 interface IResumeReportComertial extends ICounters {
   tof: ICounters;
   mof: ICounters;
   bof: ICounters;
-  allByPhases: IAllPhase[];
+  allByPhases: IAllPhase;
+  allLeads: number;
 }
 
 export default class LeadController {
   constructor(private readonly leadUseCase: LeadUseCase) {}
+
+  private phaseMap: { [key: string]: ValidKeys } = {
+    assigned: 'tof',
+    'to-contact': 'tof',
+    searching: 'mof',
+    tracking: 'mof',
+    'scheduled-tour': 'mof',
+    'finished-tour': 'mof',
+    offer: 'bof',
+    downpayment: 'bof',
+    contract: 'bof',
+    'closing-trade': 'bof',
+  };
 
   createLead = async (req: Request, res: Response) => {
     const lead: ILeadEntity = req.body;
@@ -89,32 +105,32 @@ export default class LeadController {
       bof: { allActive: 0, allDiscarded: 0 },
       allActive: 0,
       allDiscarded: 0,
-      allByPhases: [],
+      allByPhases: {},
+      allLeads: 0,
     };
     report.forEach((contact) => {
       const { data } = contact;
+      result.allLeads += contact.totalByContact;
       data.forEach((phase) => {
         const { tracking_phase: trackingPhase, discardedInPhase, activeInPhase } = phase;
-        if (['assigned', 'to-contact'].includes(trackingPhase)) {
-          result.tof.allActive += activeInPhase;
-          result.tof.allDiscarded += discardedInPhase;
+
+        const phaseKey = this.phaseMap[trackingPhase];
+        if (phaseKey) {
+          result[phaseKey].allActive += activeInPhase;
+          result[phaseKey].allDiscarded += discardedInPhase;
+
+          result.allActive += activeInPhase;
+          result.allDiscarded += discardedInPhase;
         }
-        if (['searching', 'tracking', 'scheduled-tour', 'finished-tour'].includes(trackingPhase)) {
-          result.mof.allActive += activeInPhase;
-          result.mof.allDiscarded += discardedInPhase;
-        }
-        if (['offer', 'downpayment', 'contract', 'closing-trade'].includes(trackingPhase)) {
-          result.bof.allActive += activeInPhase;
-          result.bof.allDiscarded += discardedInPhase;
-        }
-        result.allActive += activeInPhase;
-        result.allDiscarded += discardedInPhase;
-        const index = result.allByPhases.findIndex((phase) => phase.phase === trackingPhase);
-        if (index !== -1) {
-          result.allByPhases[index].allActive += activeInPhase;
-          result.allByPhases[index].allDiscarded += discardedInPhase;
+
+        if (result.allByPhases[trackingPhase]) {
+          result.allByPhases[trackingPhase].allActive += activeInPhase;
+          result.allByPhases[trackingPhase].allDiscarded += discardedInPhase;
         } else {
-          result.allByPhases.push({ phase: trackingPhase, allActive: activeInPhase, allDiscarded: discardedInPhase });
+          result.allByPhases[trackingPhase] = {
+            allActive: activeInPhase,
+            allDiscarded: discardedInPhase,
+          };
         }
       });
     });
