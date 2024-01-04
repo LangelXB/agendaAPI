@@ -1,17 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity } from '../domain/user.Entity';
+import { Schema, model } from 'mongoose';
+import { IContactLeadDocument, IContactLeadModel } from '../domain/user.Entity';
 
-@Entity()
-export default class User extends BaseEntity implements UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+const ContactLeadSchema: Schema<IContactLeadDocument> = new Schema({
+  status: { type: Number, required: true },
+  duplicated: { type: Boolean, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: String,
+  location: String,
+  real_estate_group_id: Schema.ObjectId,
+});
+const ContactLeadModel = model<IContactLeadDocument, IContactLeadModel>(
+  'contact_leads',
+  ContactLeadSchema,
+  'contact_leads'
+);
 
-  @Column()
-  name: string;
-
-  @Column()
-  lastName: string;
-
-  @Column()
-  email: string;
-}
+export default ContactLeadModel;

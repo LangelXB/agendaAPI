@@ -1,21 +1,21 @@
-import { UserEntity } from '../domain/user.Entity';
-import { UserRepositoryInterface } from '../domain/user.Repository';
-import User from './user.Model';
+import { IContactLeadEntity } from '../domain/user.Entity';
+import { ContactLeadRepositoryInterface } from '../domain/user.Repository';
+import ContactLeadModel from './user.Model';
 
-export default class UserRepositorySQL implements UserRepositoryInterface {
-  findUserById(id: number): Promise<UserEntity | null> {
-    const user = User.findOneBy({ id });
+export default class UserRepositorySQL implements ContactLeadRepositoryInterface {
+  findUserById(id: string): Promise<IContactLeadEntity | null> {
+    const user = ContactLeadModel.findById(id);
     return user;
   }
 
-  registerUser(user: UserEntity): Promise<UserEntity | null> {
-    const newUser = new User();
-    newUser.lastName = user.lastName;
+  registerUser(user: IContactLeadEntity): Promise<IContactLeadEntity | null> {
+    const newUser = new ContactLeadModel();
+    newUser.name = user.name;
     return newUser.save();
   }
 
-  listUser(): Promise<UserEntity[]> {
-    const userList = User.find();
+  listUser(): Promise<IContactLeadEntity[]> {
+    const userList = ContactLeadModel.find();
     return userList;
   }
 }

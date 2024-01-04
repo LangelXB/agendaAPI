@@ -1,7 +1,7 @@
-import { UserEntity } from './user.Entity';
+import { IContactLeadEntity } from './user.Entity';
 
-export interface UserRepositoryInterface {
-  findUserById(id: number): Promise<UserEntity | null>;
-  registerUser(user: UserEntity): Promise<UserEntity | null>;
-  listUser(): Promise<UserEntity[]>;
+export interface ContactLeadRepositoryInterface {
+  findUserById(id: string): Promise<IContactLeadEntity | null>;
+  registerUser(user: IContactLeadEntity): Promise<IContactLeadEntity | null>;
+  listUser(): Promise<IContactLeadEntity[]>;
 }

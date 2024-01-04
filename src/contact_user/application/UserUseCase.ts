@@ -1,15 +1,15 @@
-import { UserEntity } from '../domain/user.Entity';
-import { UserRepositoryInterface } from '../domain/user.Repository';
+import { IContactLeadEntity } from '../domain/user.Entity';
+import { ContactLeadRepositoryInterface } from '../domain/user.Repository';
 
-export default class UserUseCase {
-  constructor(private readonly userRepository: UserRepositoryInterface) {}
+export default class ContactLeadUseCase {
+  constructor(private readonly userRepository: ContactLeadRepositoryInterface) {}
 
-  public async registerUser(newUser: UserEntity) {
+  public async registerUser(newUser: IContactLeadEntity) {
     const userCreated = await this.userRepository.registerUser(newUser);
     return userCreated;
   }
 
-  public async getDetailUser(id: number) {
+  public async getDetailUser(id: string) {
     const user = await this.userRepository.findUserById(id);
     return user;
   }
