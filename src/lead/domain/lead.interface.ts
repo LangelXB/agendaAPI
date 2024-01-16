@@ -15,6 +15,11 @@ import { ILeadEntity } from './lead.Entity';
 //   'finished',
 //   'discarded',
 // }
+
+export enum statusEnum {
+  'active',
+  'discarded',
+}
 export interface IOptionsPagination {
   tenantId: string;
   page: number;
@@ -62,6 +67,14 @@ export interface IfilterReport {
   date?: IRangeDate;
 }
 
+export interface IfilterLeadsInComertialReport {
+  contactId: string;
+  phase: string;
+  status?: statusEnum;
+  zones?: string[];
+  date?: IRangeDate;
+}
+
 export interface ILeadRepository {
   createLead(lead: ILeadEntity): Promise<ILeadEntity | null>;
   listLead(options: IOptionsPagination): Promise<IResponsePagination>;
@@ -69,5 +82,6 @@ export interface ILeadRepository {
   countLeadsByInmo(id: string): Promise<number>;
   countAllLead(group?: boolean): Promise<number | any[]>;
   comertialReport(filter: IfilterReport): Promise<IDataComertialReport[]>;
+  getLeadsByContactInPhase(filter: IfilterLeadsInComertialReport): Promise<ILeadEntity[]>;
   // statsByInmo(filter?: string): Promise<Object>;
 }

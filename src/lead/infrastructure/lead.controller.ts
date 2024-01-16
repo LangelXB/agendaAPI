@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import { isValidObjectId } from 'mongoose';
 import LeadUseCase from '../application/leadUseCase';
 import { ILeadEntity } from '../domain/lead.Entity';
-import { IDataComertialReport, IOptionsPagination, IfilterReport } from '../domain/lead.interface';
+import {
+  IDataComertialReport,
+  IOptionsPagination,
+  IfilterLeadsInComertialReport,
+  IfilterReport,
+} from '../domain/lead.interface';
 
 type ValidKeys = 'tof' | 'mof' | 'bof';
 
@@ -96,6 +101,26 @@ export default class LeadController {
     const result = await this.leadUseCase.comertialReport(filter);
     const resume = this.resumeReportComertial(result);
     return res.json({ resume, result });
+  };
+
+  getLeadsByContactInComertialReport = async (req: Request, res: Response) => {
+    const { contactId, phase, zones, date, status } = req.body;
+    if (!contactId) return res.status(400).json({ message: 'contactId is required' });
+    if (!phase) return res.status(400).json({ message: 'phase is required' });
+    const filter: IfilterLeadsInComertialReport = { contactId, phase };
+    if (date) {
+      const { start, end } = date;
+      filter.date = {
+        start: new Date(start),
+        end: new Date(end),
+      };
+    }
+    if (zones) {
+      if (Array.isArray(zones)) filter.zones = zones as string[];
+    }
+    if (status) filter.status = status;
+    const result = await this.leadUseCase.getLeadsByContactInComertialReport(filter);
+    return res.json({ result });
   };
 
   private resumeReportComertial(report: IDataComertialReport[]): IResumeReportComertial {

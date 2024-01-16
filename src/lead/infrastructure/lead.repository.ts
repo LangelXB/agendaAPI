@@ -1,10 +1,11 @@
-import mongoose, { Aggregate, PipelineStage, ProjectionType } from 'mongoose';
+import mongoose, { Aggregate, FilterQuery, PipelineStage, ProjectionType } from 'mongoose';
 import { ILeadDocument, ILeadEntity } from '../domain/lead.Entity';
 import {
   IDataComertialReport,
   ILeadRepository,
   IOptionsPagination,
   IResponsePagination,
+  IfilterLeadsInComertialReport,
   IfilterReport,
 } from '../domain/lead.interface';
 import Lead from './lead.Model';
@@ -36,7 +37,7 @@ export default class LeadRepository implements ILeadRepository {
 
   findLeadById(id: string): Promise<ILeadEntity | null> {
     const lead = Lead.findById(id);
-    console.log(lead);
+
     return lead;
   }
 
@@ -62,7 +63,6 @@ export default class LeadRepository implements ILeadRepository {
       const total = Lead.countDocuments({ real_estate_group_id: id });
       return total;
     } catch (error) {
-      console.log(error);
       return Promise.resolve(0);
     }
   }
@@ -251,8 +251,56 @@ export default class LeadRepository implements ILeadRepository {
       },
       { $sort: { totalByContac: -1 } },
     ];
-    console.log(pipeline[0]);
+
     const query: Aggregate<IDataComertialReport[]> = Lead.aggregate(pipeline);
+    return query;
+  }
+
+  getLeadsByContactInPhase(filter: IfilterLeadsInComertialReport): Promise<ILeadEntity[]> {
+    const { contactId, phase, zones, date, status } = filter;
+    const match: FilterQuery<ILeadDocument> = {
+      contact_broker_id: new mongoose.Types.ObjectId(contactId),
+      tracking_phase: phase,
+    };
+    if (date) match.created_at = { $gte: date.start, $lte: date.end };
+
+    if (zones) {
+      match.zones = zones.length > 1 ? { $in: zones } : zones;
+    }
+    if (status) match.phase = status;
+
+    const project: ProjectionType<ILeadDocument> = {
+      contact_lead_name: 1,
+      created_at: 1,
+      updated_at: 1,
+      source: '$source.media.src',
+      postponed: 1,
+      contact_broker_id: 1,
+      budget: 1,
+    };
+    const pipeline: PipelineStage[] = [
+      {
+        $match: match,
+      },
+      {
+        $lookup: {
+          from: 'source_traffics',
+          localField: 'contact.source',
+          foreignField: '_id',
+          as: 'source',
+        },
+      },
+      {
+        $unwind: {
+          path: '$source',
+        },
+      },
+      {
+        $project: project,
+      },
+    ];
+    const query = Lead.aggregate(pipeline);
+
     return query;
   }
 }
